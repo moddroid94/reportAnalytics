@@ -18,6 +18,7 @@ class Comparator():
         self.match = {}
         for index, row in wb.iterrows():
             t1 = row['Sensore T1'].split(' ')[0]
+            #TODO Use Utils get sensor and setpoint
             try:
                 t2 = row['Sensore T2'].split(' ')[0]
                 t3 = row['Sensore T3'].split(' ')[0]
@@ -28,6 +29,7 @@ class Comparator():
             
             costate1 = row['Modalità comp. 1']
             
+            #if 'C' is in setpoint we can compare the row with the rules to check if the pulldown has begun or has ended
             if 'C' in row['Setpoint 1']:
                 setp = int(row['Setpoint 1'].split(' ')[0])
                 if self.is_loop is False:
@@ -40,14 +42,13 @@ class Comparator():
                 self.is_loop = False
                 
                 
-            
+            #add row to match dict or close the current match and add to matches dict
             if self.is_loop is True:
                 self.match[index] = row.to_dict()
             if self.is_loop is False and len(self.match) > 1:
                 self.matches.append(self.match)
                 self.match = {}
-        
+        #return matches only if present otherwise None
         if len(self.matches) > 1:
             return self.matches
-        
         return None

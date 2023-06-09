@@ -11,7 +11,7 @@ def get_low_temp(t1:int, t2:int|None, t3:int|None, t4:int|None) -> int:
         low = t1
     return low
 
-def get_setpoint_number(row):
+def get_setpoint_number():
     pass
 
 def get_sensor_number():
