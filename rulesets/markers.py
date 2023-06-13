@@ -50,7 +50,9 @@ class MarkerRules():
         '''
         Check if the parameters passed are the start of a pulldown
         Return True if row matche rules, false otherwise'''
-        low = utils.get_low_temp(temps)
+        low = utils.get_low_temp(temps, index)
+        if low is None:
+            return False
         if setp == 'Nessun':
             return False
         if abs(int(setp)-float(low)) > 5 and 'Raffreddamento' in comps[index]:
@@ -61,7 +63,11 @@ class MarkerRules():
         '''
         Check if the parameters passed are the end of a pulldown
         Return True if row matches rules, False otherwise'''
-        low = utils.get_low_temp(temps)
+        low = utils.get_low_temp(temps, index)
+        if low is None:
+            return True
+        if setp == 'Nessun':
+            return True
         if 'Spento' in comps[index]:
             return True
         if abs(int(setp)-float(low)) < 3:

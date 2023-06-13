@@ -125,21 +125,21 @@ class Comparator():
                     if rules.begin(sets.index(i), i, sens, comps) is True:
                         self.result[sets.index(i)] = True #start pulldown
                         self.match[sets.index(i)] = []
-                        _logger.debug('start pulldown')
+                        _logger.debug(f'start pulldown set: {sets.index(i)}')
                 elif self.result[sets.index(i)] is True:
                     if rules.end(sets.index(i), i, sens, comps) is True:
                         self.result[sets.index(i)] = False #end pulldown
-                        _logger.debug('end pulldown')
+                        _logger.debug(f'end pulldown set: {sets.index(i)}')
 
             for x in self.result.items():
                 if x[1] is True:
                     dict_data = {index: row.to_dict()}
                     self.match[x[0]].append(dict_data)
-                    _logger.debug('append')
+                    _logger.debug(f'append in {x[0]}')
                 if x[1] is False and len(self.match[x[0]]) > 1:
                     self.matches[x[0]].append(self.match[x[0]])
                     self.match[x[0]] = []
-                    _logger.debug('close match')
+                    _logger.debug(f'close match for {x[0]}')
 
         
         #return matches only if present otherwise None

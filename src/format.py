@@ -27,8 +27,9 @@ class Format():
                 '\nfrom:', str(dat1).split(' ')[1],
                 'to:', str(dat2).split(' ')[1],
                 '\nduration:', datf,
-                '\ndelta begin:', first_temp - setp,
-                '\ndelta end:', last_temp - setp
+                '\ndelta begin:', abs(first_temp - setp),
+                '\ndelta end:', abs(last_temp - setp),
+                '\nsetpoint', index
                 )
             print('\n__\n')
 

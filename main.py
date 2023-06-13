@@ -41,8 +41,8 @@ class ReportScraper():
 
     def format_result(self, matches:list):
         for x in matches:
-            loop = matches.index(x)+1
             for i in x:
+                loop = list(x).index(i)+1
                 if len(x[i]) > 1:
                     self.formatter.format_matches(x[i], loop)
 
