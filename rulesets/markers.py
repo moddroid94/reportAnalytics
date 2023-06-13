@@ -14,7 +14,7 @@ class MarkerRules():
             case "pulldown":
                 mode = self.p_begin(*kwargs)
             case _:
-                mode = NotImplementedError
+                raise KeyError
         return mode
     
     def end(self, *kwargs):
@@ -22,32 +22,53 @@ class MarkerRules():
             case "pulldown":
                 mode = self.p_end(*kwargs)
             case _:
-                mode = NotImplementedError
+                raise KeyError
         return mode
     
-    def p_begin(self, setp:int, t1:int, costate1:str, opstate1:str='None', t2:int|None=None, t3:int|None=None, t4:int|None=None):
+    def get_fields(self, *kwargs):
+        match self.ruleset:
+            case "pulldown":
+                mode = self.p_get_fields(*kwargs)
+            case _:
+                raise KeyError
+        return mode
+        
+    def p_get_fields(self, headers: list):
+        sets = 0
+        sens = 0
+        comp = 0
+        for key in headers:
+            if 'Setpoint' in key:
+                sets += 1
+            if 'Sensore T' in key:
+                sens += 1
+            if 'Modalità comp.' in key:
+                comp += 1
+        return sens, sets, comp
+
+    def p_begin(self, index:int, setp, temps:list, comps:list):
         '''
         Check if the parameters passed are the start of a pulldown
         Return True if row matche rules, false otherwise'''
-        low = utils.get_low_temp(t1, t2, t3, t4)
-
-        if abs(setp-float(low)) > 5 and 'Raffreddamento' in costate1:
+        low = utils.get_low_temp(temps)
+        if setp == 'Nessun':
+            return False
+        if abs(int(setp)-float(low)) > 5 and 'Raffreddamento' in comps[index]:
             return True
         return False
 
-    def p_end(self, setp:int, t1:int, costate1:str, opstate1:str='None', t2:int|None=None, t3:int|None=None, t4:int|None=None):
+    def p_end(self, index:int, setp, temps:list, comps:list):
         '''
         Check if the parameters passed are the end of a pulldown
         Return True if row matches rules, False otherwise'''
-        low = utils.get_low_temp(t1, t2, t3, t4)
-
-        if 'Spento' in costate1:
+        low = utils.get_low_temp(temps)
+        if 'Spento' in comps[index]:
             return True
-        if abs(setp-float(low)) < 3:
+        if abs(int(setp)-float(low)) < 3:
             return True
-        if 'Sbrinamento' in costate1:
+        if 'Sbrinamento' in comps[index]:
             return True
-        if 'Idle' in costate1 :
+        if 'Idle' in comps[index]:
             return True
 
         return False
