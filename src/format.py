@@ -12,16 +12,16 @@ class Format():
 
     def format_matches(self, matches:list, index: int):
         for i in matches:
-            for x in i:
-                self.end_pulldown = list(i[-1])
-                self.begin_pulldown = list(i[0])
-                dat2 = self.format_date(self.end_pulldown[0])
-                dat1 = self.format_date(self.begin_pulldown[0])
-                datf = dat2 - dat1
+            
+            self.end_pulldown = list(i[-1])
+            self.begin_pulldown = list(i[0])
+            dat2 = self.format_date(self.end_pulldown[0])
+            dat1 = self.format_date(self.begin_pulldown[0])
+            datf = dat2 - dat1
 
-                setp = int(i[0][self.begin_pulldown[0]][f'Setpoint {index}'].split(' ')[0])
-                first_temp = float(i[0][self.begin_pulldown[0]][f'Sensore T{index}'].split(' ')[0])
-                last_temp = float(i[-1][self.end_pulldown[0]][f'Sensore T{index}'].split(' ')[0])
+            setp = int(i[0][self.begin_pulldown[0]][f'Setpoint {index}'].split(' ')[0])
+            first_temp = float(i[0][self.begin_pulldown[0]][f'Sensore T{index}'].split(' ')[0])
+            last_temp = float(i[-1][self.end_pulldown[0]][f'Sensore T{index}'].split(' ')[0])
 
             print('date:', str(dat1).split(' ', maxsplit=1)[0],
                 '\nfrom:', str(dat1).split(' ')[1],

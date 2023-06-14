@@ -23,7 +23,7 @@ class ReportScraper():
         _logger.debug('loaded')
 
         #testload
-        if self.load('reports/26677.xlsx') is True:
+        if self.load('reports/27349.xlsx') is True:
             self.compare(self.wb, self.ruleset)
 
     def load(self, workbook: str):
