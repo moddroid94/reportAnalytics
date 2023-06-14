@@ -11,11 +11,12 @@ def get_low_temp(temps:list, multi:int|None=None) -> float|None:
         try:
             return float(temps[multi])
         except ValueError:
-            _logger.debug('None Found')
+            _logger.debug('multi temps not found')
             return None
-    try:
-        low = min(temps)
-    except Exception as errore: #pylint: disable=W0718
-        _logger.error('error comparing temps %s', errore)
-        low = temps[0]
-    return low
+    else:
+        try:
+            low = min(temps)
+        except Exception as errore: #pylint: disable=W0718
+            _logger.error('error comparing temps %s', errore)
+            return None
+        return low

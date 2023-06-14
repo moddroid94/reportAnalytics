@@ -13,6 +13,8 @@ class MarkerRules():
         match self.ruleset:
             case "pulldown":
                 mode = self.p_begin(*kwargs)
+            case "defrost":
+                mode = self.d_begin(*kwargs)
             case _:
                 raise KeyError
         return mode
@@ -21,6 +23,8 @@ class MarkerRules():
         match self.ruleset:
             case "pulldown":
                 mode = self.p_end(*kwargs)
+            case "defrost":
+                mode = self.d_end(*kwargs)
             case _:
                 raise KeyError
         return mode
@@ -29,11 +33,13 @@ class MarkerRules():
         match self.ruleset:
             case "pulldown":
                 mode = self.p_get_fields(*kwargs)
+            case "defrost":
+                mode = self.d_get_fields(*kwargs)
             case _:
                 raise KeyError
         return mode
         
-    def p_get_fields(self, headers: list):
+    def p_get_fields(self, headers:list):
         sets = 0
         sens = 0
         comp = 0
@@ -44,7 +50,7 @@ class MarkerRules():
                 sens += 1
             if 'Modalità comp.' in key:
                 comp += 1
-        return sens, sets, comp
+        return {'sens':sens,'sets': sets,'comps': comp}
 
     def p_begin(self, index:int, setp, temps:list, comps:list):
         '''
@@ -75,7 +81,7 @@ class MarkerRules():
             comps_valid = comps
         else:
             comps_valid = comps[index]
-
+        
         if low is None:
             return True
         if setp == 'Nessun':
@@ -87,6 +93,44 @@ class MarkerRules():
         if 'Sbrinamento' in comps_valid:
             return True
         if 'Idle' in comps_valid:
+            return True
+
+        return False
+
+    def d_get_fields(self, headers:list):
+        temp = 0
+        comp = 0
+        for key in headers:
+            if 'Sensore T' in key:
+                temp += 1
+            if 'Modalità comp.' in key:
+                comp += 1
+        return {'sens':temp,'comps': comp}
+
+    def d_begin(self, index:int, setp, temps:list, comps:list):
+        '''
+        Check if the parameters passed are the start of a defrost
+        Return True if row matche rules, false otherwise'''
+        if index is None:
+            comps_valid = comps
+        else:
+            comps_valid = comps[index]
+
+        if 'Sbrinamento' in comps_valid:
+            return True
+
+        return False
+
+    def d_end(self, index:int, setp, temps:list, comps:list):
+        '''
+        Check if the parameters passed are the end of a pulldown
+        Return True if row matches rules, False otherwise'''
+        if index is None:
+            comps_valid = comps
+        else:
+            comps_valid = comps[index]
+
+        if 'Sbrinamento' not in comps_valid:
             return True
 
         return False

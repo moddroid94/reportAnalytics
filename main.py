@@ -8,7 +8,7 @@ from src import comparator as cp
 from src import format as fm
 
 
-logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
+logging.basicConfig(encoding="utf-8", level=logging.ERROR)
 _logger = logging.getLogger(__name__)
 
 
@@ -23,7 +23,7 @@ class ReportScraper():
         _logger.debug('loaded')
 
         #testload
-        if self.load('reports/27349.xlsx') is True:
+        if self.load('reports/26677.xlsx') is True:
             self.compare(self.wb, self.ruleset)
 
     def load(self, workbook: str):
@@ -42,9 +42,9 @@ class ReportScraper():
     def format_result(self, matches:list):
         for x in matches:
             for i in x:
-                loop = list(x).index(i)+1
-                if len(x[i]) > 1:
-                    self.formatter.format_matches(x[i], loop)
+                loop = i+1
+                if len(x[i]) > 0:
+                    self.formatter.format_matches(matches[0][i], loop)
 
 if __name__ == "__main__":
     ReportScraper()
