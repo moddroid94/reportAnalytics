@@ -31,7 +31,7 @@ class Format():
                 '\ndelta begin:', abs(first_temp - setp),
                 '\ndelta end:', abs(last_temp - setp),
                 '\nmode:', mode,
-                '\nsetpoint:', index
+                '\nsetpoint', index
                 )
             print('\n__\n')
 

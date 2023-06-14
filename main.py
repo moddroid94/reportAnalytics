@@ -8,7 +8,7 @@ from src import comparator as cp
 from src import format as fm
 
 
-logging.basicConfig(encoding="utf-8", level=logging.ERROR)
+logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 _logger = logging.getLogger(__name__)
 
 
@@ -19,7 +19,7 @@ class ReportScraper():
         self.loader = ld.Loader()
         self.comparator = cp.Comparator()
         self.formatter = fm.Format()
-        self.ruleset = ['pulldown']
+        self.ruleset = ['pulldown', 'defrost']
         _logger.debug('loaded')
 
         #testload
@@ -37,10 +37,12 @@ class ReportScraper():
     def compare(self, wb:pd.DataFrame , ruleset:list):
         matches = self.comparator.check_conditions(wb, ruleset)
         if matches is not None:
-            self.format_result(matches)
+            for match in matches:
+                self.format_result([match])
 
     def format_result(self, matches:list):
         for x in matches:
+            print(x)
             for i in x:
                 loop = i+1
                 if len(x[i]) > 0:

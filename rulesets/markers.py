@@ -98,19 +98,23 @@ class MarkerRules():
         return False
 
     def d_get_fields(self, headers:list):
-        temp = 0
+        sets = 0
+        sens = 0
         comp = 0
         for key in headers:
+            if 'Setpoint' in key:
+                sets += 1
             if 'Sensore T' in key:
-                temp += 1
+                sens += 1
             if 'Modalità comp.' in key:
                 comp += 1
-        return {'sens':temp,'comps': comp}
+        return {'sens':sens,'sets': sets,'comps': comp}
 
     def d_begin(self, index:int, setp, temps:list, comps:list):
         '''
         Check if the parameters passed are the start of a defrost
         Return True if row matche rules, false otherwise'''
+        
         if index is None:
             comps_valid = comps
         else:
