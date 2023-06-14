@@ -19,6 +19,7 @@ class Comparator():
         self.matches = {}
         self.match = {}
         self.session = []
+        self.multi = None
     
     def check_conditions(self, wb:pd.DataFrame, ruleset:list):
         returns = []
@@ -28,6 +29,7 @@ class Comparator():
         return returns
     
     def check_rows(self, wb:pd.DataFrame, rules:markers.MarkerRules):
+        self.multi = None
         self.result = {
             0: False,
             1: False,
@@ -120,16 +122,19 @@ class Comparator():
                 case _:
                     comps = [None]
 
+            
             for i in sets:
+                if len(sets) > 1:
+                    self.multi = sets.index(i)
                 if self.result[sets.index(i)] is False:
-                    if rules.begin(sets.index(i), i, sens, comps) is True:
+                    if rules.begin(self.multi, i, sens, comps) is True:
                         self.result[sets.index(i)] = True #start pulldown
                         self.match[sets.index(i)] = []
-                        _logger.debug(f'start pulldown set: {sets.index(i)}')
+                        _logger.debug('start pulldown set: %s', sets.index(i))
                 elif self.result[sets.index(i)] is True:
-                    if rules.end(sets.index(i), i, sens, comps) is True:
+                    if rules.end(self.multi, i, sens, comps) is True:
                         self.result[sets.index(i)] = False #end pulldown
-                        _logger.debug(f'end pulldown set: {sets.index(i)}')
+                        _logger.debug('end pulldown set: %s ',sets.index(i))
 
             for x in self.result.items():
                 if x[1] is True:

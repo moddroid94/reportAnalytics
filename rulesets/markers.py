@@ -1,4 +1,4 @@
-#pylint: disable=c0103,w0613
+#pylint: disable=c0103,w0613, R0911
 
 import logging
 from src import utils
@@ -51,11 +51,17 @@ class MarkerRules():
         Check if the parameters passed are the start of a pulldown
         Return True if row matche rules, false otherwise'''
         low = utils.get_low_temp(temps, index)
+
+        if index is None:
+            comps_valid = comps
+        else:
+            comps_valid = comps[index]
+
         if low is None:
             return False
         if setp == 'Nessun':
             return False
-        if abs(int(setp)-float(low)) > 5 and 'Raffreddamento' in comps[index]:
+        if abs(int(setp)-float(low)) > 5 and 'Raffreddamento' in comps_valid:
             return True
         return False
 
@@ -64,17 +70,23 @@ class MarkerRules():
         Check if the parameters passed are the end of a pulldown
         Return True if row matches rules, False otherwise'''
         low = utils.get_low_temp(temps, index)
+
+        if index is None:
+            comps_valid = comps
+        else:
+            comps_valid = comps[index]
+
         if low is None:
             return True
         if setp == 'Nessun':
             return True
-        if 'Spento' in comps[index]:
+        if 'Spento' in comps_valid:
             return True
         if abs(int(setp)-float(low)) < 3:
             return True
-        if 'Sbrinamento' in comps[index]:
+        if 'Sbrinamento' in comps_valid:
             return True
-        if 'Idle' in comps[index]:
+        if 'Idle' in comps_valid:
             return True
 
         return False

@@ -1,3 +1,4 @@
 *.xlsx
 .vscode
 *.pyc
+*.xlsx#
