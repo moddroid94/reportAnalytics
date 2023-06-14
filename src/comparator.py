@@ -60,27 +60,27 @@ class Comparator():
                     if rules.begin(self.multi, i, pf.sens, pf.comps) is True:
                         self.result[idx] = True #start pulldown
                         self.match[idx] = []
-                        _logger.debug('start match set: %s', idx)
+                        _logger.debug('start %s match set: %s',rule, idx)
                 elif self.result[idx] is True:
                     if rules.end(self.multi, i, pf.sens, pf.comps) is True:
                         self.result[idx] = False #end pulldown
-                        _logger.debug('end match set: %s ',idx)
+                        _logger.debug('end %s match set: %s ',rule,idx)
 
             for x in self.result.items():
                 if x[1] is True:
                     dict_data = {index: row.to_dict()}
                     self.match[x[0]].append(dict_data)
-                    _logger.debug('append match to set %s', x[0])
+                    _logger.debug('append %s match to set %s',rule, x[0])
                 elif x[1] is False and len(self.match[x[0]]) > 1:
                     #TODO Could add this line too and sort later with reason of the ending
                     try:
                         self.matches[x[0]].append({'mode':rule,'data':self.match[x[0]]})
                     except KeyError:
-                        _logger.debug('create dict %s', x[0])
+                        _logger.debug('create %s dict %s', rule, x[0])
                         self.matches[x[0]] = []
                         self.matches[x[0]].append({'mode':rule,'data':self.match[x[0]]})
                     self.match[x[0]] = []
-                    _logger.debug('close set for %s', x[0])
+                    _logger.debug('close %s set for %s', rule, x[0])
 
         
         #return matches only if present otherwise None
