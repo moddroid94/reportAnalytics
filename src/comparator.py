@@ -25,9 +25,13 @@ class Comparator():
         returns = []
         for rule in ruleset:
             rules = markers.MarkerRules(rule)
-            returns.append(self.check_rows(wb, rules, rule))
-        return returns
+            returns.append(self.iter_wb_check(wb, rules, rule))
+        #return returns
     
+    def iter_wb_check(self, wb:pd.DataFrame, ruleset:markers.MarkerRules, rule:str):
+        for i in wb.itertuples(name=None):
+            print (i)
+
     def check_rows(self, wb:pd.DataFrame, rules:markers.MarkerRules, rule:str):
         self.result = {
             0: False,
@@ -48,9 +52,10 @@ class Comparator():
             headers.append(col)
         fields = rules.get_fields(headers)
 
-        for index, row in wb.iterrows():
+        '''for index, row in wb.iterrows():
             pop_fields = self.populate_fields(fields, row)
             pf = types.SimpleNamespace(**pop_fields)
+            
             for idx, i in enumerate(pf.sets):
                 if len(pf.sets) > 1:
                     self.multi = idx
@@ -82,10 +87,7 @@ class Comparator():
                     self.match[x[0]] = []
                     _logger.debug('close %s set for %s', rule, x[0])
 
-        
-        #return matches only if present otherwise None
-
-        return self.matches
+        return self.matches'''
 
 
     def populate_fields(self, fields:dict, row:pd.Series):
