@@ -20,3 +20,8 @@ def get_low_temp(temps:list, multi:int|None=None) -> float|None:
             _logger.error('error comparing temps %s', errore)
             return None
         return low
+
+def zip_fields(wb:pd.DataFrame, fields:list):
+    fields_number = len(fields)
+    zip_head = zip(wb.index, list(fields))
+    return zip_head

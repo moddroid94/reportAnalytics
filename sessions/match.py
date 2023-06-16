@@ -6,6 +6,7 @@ _logger = logging.getLogger(__name__)
 
 class Match(ABC):
     def __init__(self) -> None:
+        self.name = str
         self.matches: dict
         self.data: datetime.date
         self.start_time: datetime.time
@@ -34,12 +35,12 @@ class Match(ABC):
 class Pulldown(Match):
     def __init__(self) -> None:
         super().__init__()
+        self.name = 'pulldown'
         self.delta_temp_0 = None
         self.delta_temp_1 = None
 
     def set_fields(self, headers: list):
         _fields = [
-            "Data/Ora",
             "Setpoint 1",
             "Setpoint 2",
             "Setpoint 3",
@@ -61,4 +62,8 @@ class Pulldown(Match):
         self.fields = fields
 
     def rules(self, row):
-        
+        print('call r')
+    def add_row(self):
+        print('call a')
+    def close_match(self):
+        print('call c')

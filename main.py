@@ -6,39 +6,62 @@ from rulesets import markers
 from src import loader as ld
 from src import comparator as cp
 from src import format as fm
-
+from sessions import match
+import enum
 
 logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 _logger = logging.getLogger(__name__)
 
-
+class Rule(enum.Enum):
+    pulldown = match.Pulldown()
+    
 class ReportScraper():
-    wb: pd.DataFrame
+    wb: pd.DataFrame|None
 
     def __init__(self) -> None:
         self.loader = ld.Loader()
         self.comparator = cp.Comparator()
         self.formatter = fm.Format()
         self.ruleset = ['pulldown', 'defrost']
+        self.rules = []
+        self.headers = []
         _logger.debug('loaded')
 
         #testload
-        if self.load('reports/26677.xlsx') is True:
-            self.compare(self.wb, self.ruleset)
+        if self.load_report('reports/26677.xlsx') is True and self.load_rules(self.ruleset) is True:
+            self.iter_loop()
 
-    def load(self, workbook: str):
+    def load_report(self, workbook: str):
         try:
             self.wb = self.loader.load_wb(workbook)
             return True
         except (FileNotFoundError, NotImplementedError) as errore:
+            self.wb = None
             _logger.error('Error while loading %s', errore)
             raise errore
 
-    def compare(self, wb:pd.DataFrame , ruleset:list):
-        matches = self.comparator.check_conditions(wb, ruleset)
-        if matches is not None:
-            for match in matches:
-                self.format_result([match])
+    def load_rules(self, ruleset):
+        for rule in Rule:
+            if rule.name in ruleset:
+                self.rules.append(rule.value)
+            return True
+    
+    
+    def iter_loop(self):
+        if len(self.rules) < 1 or self.wb is None:
+            _logger.error('No data or Rule found')
+            raise ValueError
+
+        for col in self.wb.columns:
+            self.headers.append(col)
+        
+        for rule in self.rules:
+            rule.set_fields(self.headers)
+            new = self.wb.filter(list(rule.fields))
+            for row in new.itertuples(name=None):
+                print(row)
+            ###THIS DEPENDS UPON WHAT DATA STRUCTURE WE WANNA USE IN PRODUCTION####
+
 
     def format_result(self, matches:list):
         for x in matches:

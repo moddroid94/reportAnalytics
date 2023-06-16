@@ -29,8 +29,7 @@ class Comparator():
         #return returns
     
     def iter_wb_check(self, wb:pd.DataFrame, ruleset:markers.MarkerRules, rule:str):
-        for i in wb.itertuples(name=None):
-            print (i)
+        
 
     def check_rows(self, wb:pd.DataFrame, rules:markers.MarkerRules, rule:str):
         self.result = {
