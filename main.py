@@ -44,9 +44,9 @@ class ReportScraper():
         for rule in Rule:
             if rule.name in ruleset:
                 self.rules.append(rule.value)
-            return True
-    
-    
+        return True
+
+
     def iter_loop(self):
         if len(self.rules) < 1 or self.wb is None:
             _logger.error('No data or Rule found')
@@ -54,12 +54,14 @@ class ReportScraper():
 
         for col in self.wb.columns:
             self.headers.append(col)
-        
+
         for rule in self.rules:
             rule.set_fields(self.headers)
             new = self.wb.filter(list(rule.fields))
             for row in new.itertuples(name=None):
-                print(row)
+                for x in range(1,rule.compartments+1):
+                    _logger.debug((row, x))
+                    
             ###THIS DEPENDS UPON WHAT DATA STRUCTURE WE WANNA USE IN PRODUCTION####
 
 

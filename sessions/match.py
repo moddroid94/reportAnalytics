@@ -8,6 +8,7 @@ class Match(ABC):
     def __init__(self) -> None:
         self.name = str
         self.matches: dict
+        self.compartmens: int
         self.data: datetime.date
         self.start_time: datetime.time
         self.end_time: datetime.time
@@ -20,7 +21,7 @@ class Match(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def rules(self):
+    def rules(self, row):
         raise NotImplementedError
 
     @abstractmethod
@@ -36,6 +37,7 @@ class Pulldown(Match):
     def __init__(self) -> None:
         super().__init__()
         self.name = 'pulldown'
+        self.compartments = 0
         self.delta_temp_0 = None
         self.delta_temp_1 = None
 
@@ -45,10 +47,10 @@ class Pulldown(Match):
             "Setpoint 2",
             "Setpoint 3",
             "Setpoint 4",
-            "Sensore 1",
-            "Sensore 2",
-            "Sensore 3",
-            "Sensore 4",
+            "Sensore T1",
+            "Sensore T2",
+            "Sensore T3",
+            "Sensore T4",
             "Modalità comp. 1",
             "Modalità comp. 2",
             "Modalità comp. 3",
@@ -58,11 +60,13 @@ class Pulldown(Match):
         for header in headers:
             if header in _fields:
                 fields.append(header)
+                if 'Setpoint' in header:
+                    self.compartments += 1
                 _logger.debug('Appended Field %s', header)
         self.fields = fields
 
-    def rules(self, row):
-        print('call r')
+    def rules(self, row, compartment=None):
+        pass
     def add_row(self):
         print('call a')
     def close_match(self):
