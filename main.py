@@ -28,7 +28,7 @@ class ReportScraper():
         _logger.debug('loaded')
 
         #testload
-        if self.load_report('reports/26677.xlsx') is True and self.load_rules(self.ruleset) is True:
+        if self.load_report('reports/26503.xlsx') is True and self.load_rules(self.ruleset) is True:
             self.iter_loop()
 
     def load_report(self, workbook: str):
@@ -58,9 +58,9 @@ class ReportScraper():
         for rule in self.rules:
             rule.set_fields(self.headers)
             new = self.wb.filter(list(rule.fields))
-            for row in new.itertuples(name=None):
-                for x in range(1,rule.compartments+1):
-                    _logger.debug((row, x))
+            for index, row in new.iterrows():
+                rule.rules(row, index, rule.compartments)
+                #_logger.debug((row, rule.compartments))
                     
             ###THIS DEPENDS UPON WHAT DATA STRUCTURE WE WANNA USE IN PRODUCTION####
 

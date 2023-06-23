@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 class ReportScraper():
-    wf = pd.read_excel('27364.xlsx', index_col=0, header=6)
+    wf = pd.read_excel('reports/26503.xlsx', index_col=0, header=6)
     #states
     pulldown = False
     idling = False

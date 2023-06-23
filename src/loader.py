@@ -11,7 +11,7 @@ class Loader():
     
     def load_wb(self, workbook: str):
         try:
-            self.wb = pd.read_excel(workbook, index_col=0, header=6)
+            self.wb = pd.read_excel(workbook, header=6)
             return self.wb
         except FileNotFoundError as errore:
             _logger.error('File Not Found - %s', errore)
